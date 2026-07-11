@@ -15,10 +15,33 @@ pipeline {
             }
         }
 
-        stage('Install & Test') {
+        stage('Install Dependencies') {
             steps {
+                // 'npm ci' is perfect for CI/CD as it installs exact versions from package-lock.json
                 sh 'npm ci'
-                sh 'npm test'
+            }
+        }
+
+        stage('Code Quality Checks') {
+            parallel {
+                stage('Lint') {
+                    steps {
+                        echo 'Checking code quality with ESLint...'
+                        sh 'npm run lint'
+                    }
+                }
+                stage('Format Check') {
+                    steps {
+                        echo 'Checking code formatting with Prettier...'
+                        sh 'npm run format:check'
+                    }
+                }
+                stage('Test') {
+                    steps {
+                        echo 'Running unit tests...'
+                        sh 'npm test'
+                    }
+                }
             }
         }
 

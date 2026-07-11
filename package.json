@@ -5,7 +5,10 @@
   "main": "index.js",
   "scripts": {
     "start": "node src/index.js",
-    "test": "echo 'no tests yet'"
+    "test": "echo 'no tests yet'",
+    "lint": "eslint \"src/**/*.js\"",
+    "format:check": "prettier --check \"src/**/*.js\"",
+    "format:fix": "prettier --write \"src/**/*.js\""
   },
   "keywords": [],
   "author": "",
@@ -13,5 +16,9 @@
   "type": "commonjs",
   "dependencies": {
     "express": "^5.2.1"
+  },
+  "devDependencies": {
+    "eslint": "^9.0.0",
+    "prettier": "^3.0.0"
   }
 }
