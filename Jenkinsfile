@@ -7,7 +7,7 @@ pipeline {
     }
 
     environment {
-        // Make sure Jenkins can find docker/kubectl regardless of Mac chip type
+        // Make sure Jenkins can find docker/kubectl regardless of Mac chip types
         PATH = "/usr/local/bin:/opt/homebrew/bin:${env.PATH}"
         IMAGE_NAME = "jenkins-demo-app"
         IMAGE_TAG  = "local"
