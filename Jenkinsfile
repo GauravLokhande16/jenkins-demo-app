@@ -1,6 +1,11 @@
 pipeline {
     agent any
 
+    // This defines the input field inside the Jenkins UI
+    parameters {
+        string(name: 'BRANCH_NAME', defaultValue: 'main', description: 'Which branch do you want to test and deploy?')
+    }
+    
     environment {
         // Make sure Jenkins can find docker/kubectl regardless of Mac chip type
         PATH = "/usr/local/bin:/opt/homebrew/bin:${env.PATH}"
