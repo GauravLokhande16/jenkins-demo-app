@@ -3,9 +3,9 @@ pipeline {
 
     // This defines the input field inside the Jenkins UI
     parameters {
-        string(name: 'BRANCH_NAME', defaultValue: 'dev', description: 'Which branch do you want to test and deploy?')
+        string(name: 'BRANCH_NAME', defaultValue: 'main', description: 'Which branch do you want to test and deploy?')
     }
-
+    
     environment {
         // Make sure Jenkins can find docker/kubectl regardless of Mac chip type
         PATH = "/usr/local/bin:/opt/homebrew/bin:${env.PATH}"
@@ -16,10 +16,7 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                // This clean syntax handles pulling whatever branch you type into the UI parameter
-                git branch: "${params.BRANCH_NAME}", 
-                    url: 'https://github.com/GauravLokhande16/jenkins-demo-app.git'
-                //    credentialsId: 'YOUR_GITHUB_CREDENTIALS_ID'  Remove this line if it's a public repository
+                checkout scm
             }
         }
 
@@ -54,20 +51,12 @@ pipeline {
         }
 
         stage('Build Docker Image') {
-            when {
-                // This matches 'main' OR 'origin/main'
-                expression { return env.BRANCH_NAME == params.BRANCH_NAME || params.BRANCH_NAME != '' }
-            }
             steps {
                 sh "docker build -t ${IMAGE_NAME}:${IMAGE_TAG} ."
             }
         }
 
         stage('Deploy to Kubernetes') {
-            when {
-                // This matches 'main' OR 'origin/main'
-              expression { return env.BRANCH_NAME == params.BRANCH_NAME || params.BRANCH_NAME != '' }
-            }
             steps {
                 sh '''
                     kubectl apply -f k8s/deployment.yaml
