@@ -5,7 +5,7 @@ pipeline {
     parameters {
         string(name: 'BRANCH_NAME', defaultValue: 'main', description: 'Which branch do you want to test and deploy?')
     }
-    
+
     environment {
         // Make sure Jenkins can find docker/kubectl regardless of Mac chip type
         PATH = "/usr/local/bin:/opt/homebrew/bin:${env.PATH}"
@@ -51,12 +51,20 @@ pipeline {
         }
 
         stage('Build Docker Image') {
+            when {
+                // This matches 'main' OR 'origin/main'
+                expression { return params.BRANCH_NAME ==~ /(origin\/)?main/ }
+            }
             steps {
                 sh "docker build -t ${IMAGE_NAME}:${IMAGE_TAG} ."
             }
         }
 
         stage('Deploy to Kubernetes') {
+            when {
+                // This matches 'main' OR 'origin/main'
+                expression { return params.BRANCH_NAME ==~ /(origin\/)?main/ }
+            }
             steps {
                 sh '''
                     kubectl apply -f k8s/deployment.yaml
