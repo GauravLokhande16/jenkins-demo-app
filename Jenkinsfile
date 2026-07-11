@@ -16,7 +16,10 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                checkout scm
+                // This clean syntax handles pulling whatever branch you type into the UI parameter
+                git branch: "${params.BRANCH_NAME}", 
+                    url: 'https://github.com/GauravLokhande16/jenkins-demo-app.git'
+                //    credentialsId: 'YOUR_GITHUB_CREDENTIALS_ID'  Remove this line if it's a public repository
             }
         }
 
