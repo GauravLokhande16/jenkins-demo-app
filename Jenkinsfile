@@ -3,7 +3,7 @@ pipeline {
 
     // This defines the input field inside the Jenkins UI
     parameters {
-        string(name: 'BRANCH_NAME', defaultValue: 'main', description: 'Which branch do you want to test and deploy?')
+        string(name: 'BRANCH_NAME', defaultValue: 'dev', description: 'Which branch do you want to test and deploy?')
     }
 
     environment {
@@ -56,7 +56,7 @@ pipeline {
         stage('Build Docker Image') {
             when {
                 // This matches 'main' OR 'origin/main'
-                expression { return params.BRANCH_NAME ==~ /(origin\/)?main/ }
+                expression { return env.BRANCH_NAME == params.BRANCH_NAME || params.BRANCH_NAME != '' }
             }
             steps {
                 sh "docker build -t ${IMAGE_NAME}:${IMAGE_TAG} ."
@@ -66,7 +66,7 @@ pipeline {
         stage('Deploy to Kubernetes') {
             when {
                 // This matches 'main' OR 'origin/main'
-                expression { return params.BRANCH_NAME ==~ /(origin\/)?main/ }
+              expression { return env.BRANCH_NAME == params.BRANCH_NAME || params.BRANCH_NAME != '' }
             }
             steps {
                 sh '''
