@@ -1,9 +1,13 @@
 pipeline {
     agent any
 
+    triggers {
+        githubPush()
+    }
+
     // This defines the input field inside the Jenkins UI
     parameters {
-        string(name: 'BRANCH_NAME', defaultValue: 'dev', description: 'Which branch do you want to test and deploy?')
+        string(name: 'BRANCH_NAME', description: 'Which branch do you want to test and deploy?')
     }
 
     environment {
